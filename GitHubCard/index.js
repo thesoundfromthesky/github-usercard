@@ -1,11 +1,12 @@
+"use strict";
 /* Step 1: using axios, send a GET request to the following URL 
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+
 axios
   .get("https://api.github.com/users/thesoundfromthesky")
   .then(function(response) {
-    // handle success
     console.log(response);
   })
   .catch(function(error) {
@@ -27,6 +28,19 @@ axios
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+
+(async _ => {
+  try {
+    const response = await axios.get(
+      "https://api.github.com/users/thesoundfromthesky"
+    );
+    const data = await response.data;
+    const [cards] = document.getElementsByClassName("cards");
+    cards.appendChild(createCard(data));
+  } catch (e) {
+    console.log(e);
+  }
+})();
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -78,22 +92,23 @@ function createCard(insert) {
   userName.textContent = insert.login;
 
   const location = document.createElement("p");
-  location.textContent = insert.location ? insert.location : "";
+  location.textContent = `Location: ${insert.location ? insert.location : ""}`;
 
   const profile = document.createElement("p");
+  profile.textContent = "Profile: ";
   const url = document.createElement("a");
   url.setAttribute("href", insert.html_url);
   url.textContent = insert.html_url;
   profile.appendChild(url);
 
   const followers = document.createElement("p");
-  followers.textContent = insert.followers;
+  followers.textContent = `Followers: ${insert.followers}`;
 
   const following = document.createElement("p");
-  following.textContent = insert.following;
+  following.textContent = `Following: ${insert.following}`;
 
   const bio = document.createElement("p");
-  bio.textContent = insert.bio ? insert.bio : "";
+  bio.textContent = `Bio: ${insert.bio ? insert.bio : ""}`;
 
   info.append(name, userName, location, profile, followers, following, bio);
   card.append(img, info);
