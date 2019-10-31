@@ -16,7 +16,6 @@ axios
   .finally(function() {
     // always executed
   });
-
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -28,19 +27,19 @@ axios
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+const [cards] = document.getElementsByClassName("cards");
 
-(async _ => {
+async function appendCard(username) {
   try {
-    const response = await axios.get(
-      "https://api.github.com/users/thesoundfromthesky"
+    const { data } = await axios.get(
+      `https://api.github.com/users/${username}`
     );
-    const data = await response.data;
-    const [cards] = document.getElementsByClassName("cards");
-    cards.appendChild(createCard(data));
+    return cards.appendChild(createCard(data));
   } catch (e) {
     console.log(e);
   }
-})();
+}
+appendCard("thesoundfromthesky");
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -51,9 +50,52 @@ axios
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-
+/* List of LS Instructors Github username's: 
+  tetondan
+  dustinmyers
+  justsml
+  luishrd
+  bigknell
+*/
+const instructors = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
 const followersArray = [];
 
+(async _ => {
+  try {
+    const res = await Promise.all(
+      instructors.map(async username => {
+        try {
+          const { data } = await axios.get(
+            `https://api.github.com/users/${username}/followers`
+          );
+          return { [username]: data };
+        } catch (e) {
+          console.log(e);
+        }
+      })
+    );
+
+    res.forEach(users => {
+      for (const user in users) {
+        followersArray.push({ [user]: users[user].map(({ login }) => login) });
+      }
+    });
+    console.log(followersArray);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+(async _ => {
+  for await (const user of instructors) {
+    appendCard(user);
+  }
+})();
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
