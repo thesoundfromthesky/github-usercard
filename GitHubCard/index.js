@@ -91,6 +91,7 @@ const followersArray = [];
     console.log(e);
   }
 })();
+
 (async _ => {
   for await (const user of instructors) {
     appendCard(user);
