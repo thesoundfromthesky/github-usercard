@@ -15,11 +15,12 @@ axios
   .finally(function() {
     // always executed
   });
-  
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
-
+   
+   F12 in the browser -> I looked through data.
    Skip to Step 3.
 */
 
